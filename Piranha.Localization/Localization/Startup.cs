@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using WebActivatorEx;
 using Piranha.WebPages;
 
@@ -43,9 +44,15 @@ namespace Piranha.Localization
 			};
 			Hooks.Manager.PageEditModelLoaded += (controller, menu, model) => {
 				Localizer.LocalizePageOnLoad(model);
+
+				// Reset culture
+				ResetCulture();
 			};
 			Hooks.Manager.PageEditModelBeforeSave += (controller, menu, model) => {
 				Localizer.LocalizePageBeforeSave(model);
+
+				// Reset culture
+				ResetCulture();
 			};
 
 			//
@@ -97,6 +104,15 @@ namespace Piranha.Localization
 					}
 				}
 			};
+		}
+
+		private static void ResetCulture() {
+			var def = Utils.GetDefaultCulture();
+
+			if (def.Name != CultureInfo.CurrentUICulture.Name) {
+				Thread.CurrentThread.CurrentCulture =
+					Thread.CurrentThread.CurrentUICulture = def;
+			}
 		}
 	}
 }
