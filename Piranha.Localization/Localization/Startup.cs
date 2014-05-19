@@ -53,8 +53,8 @@ namespace Piranha.Localization
 					controller.ViewBag.Title = Piranha.Resources.Page.EditTitleNew;
 				else controller.ViewBag.Title = Piranha.Resources.Page.EditTitleExisting;
 			};
-			Hooks.Manager.PageEditModelBeforeSave += (controller, menu, model) => {
-				Localizer.LocalizePageBeforeSave(model);
+			Hooks.Manager.PageEditModelBeforeSave += (controller, menu, model, publish) => {
+				Localizer.LocalizePageBeforeSave(model, publish);
 
 				// Reset culture
 				ResetCulture();
@@ -74,7 +74,7 @@ namespace Piranha.Localization
 			Hooks.Manager.PostEditModelLoaded += (controller, menu, model) => {
 				// Do something
 			};
-			Hooks.Manager.PostEditModelBeforeSave += (controller, menu, model) => { 
+			Hooks.Manager.PostEditModelBeforeSave += (controller, menu, model, publish) => { 
 				// Do something
 			};
 
