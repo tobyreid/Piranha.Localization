@@ -47,12 +47,22 @@ namespace Piranha.Localization
 
 				// Reset culture
 				ResetCulture();
+
+				// Reset title
+				if (model.Page.IsNew)
+					controller.ViewBag.Title = Piranha.Resources.Page.EditTitleNew;
+				else controller.ViewBag.Title = Piranha.Resources.Page.EditTitleExisting;
 			};
 			Hooks.Manager.PageEditModelBeforeSave += (controller, menu, model) => {
 				Localizer.LocalizePageBeforeSave(model);
 
 				// Reset culture
 				ResetCulture();
+
+				// Reset title
+				if (model.Page.IsNew)
+					controller.ViewBag.Title = Piranha.Resources.Page.EditTitleNew;
+				else controller.ViewBag.Title = Piranha.Resources.Page.EditTitleExisting;
 			};
 
 			//
@@ -83,7 +93,6 @@ namespace Piranha.Localization
 					str.Append(String.Format("<li><a href=\"{0}\">{1}</a></li>",
 						"/" + lang.UrlPrefix + url.Action("edit", new { id = model.Page.Id }),
 						lang.Name));
-
 				}
 
 				//
