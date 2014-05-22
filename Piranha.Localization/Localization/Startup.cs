@@ -46,7 +46,7 @@ namespace Piranha.Localization
 				Localizer.LocalizePageOnLoad(model);
 
 				// Reset culture
-				ResetCulture();
+				ResetCulture(controller.HttpContext);
 
 				// Reset title
 				if (model.Page.IsNew)
@@ -57,7 +57,7 @@ namespace Piranha.Localization
 				Localizer.LocalizePageBeforeSave(model, publish);
 
 				// Reset culture
-				ResetCulture();
+				ResetCulture(controller.HttpContext);
 
 				// Reset title
 				if (model.Page.IsNew)
@@ -98,8 +98,8 @@ namespace Piranha.Localization
 				//
 				// Modify the post action to the currently selected language.
 				//
-				if (Utils.GetDefaultCulture().Name != CultureInfo.CurrentUICulture.Name) {
-					var lang = Module.Languages.Where(l => l.Culture == CultureInfo.CurrentUICulture.Name).SingleOrDefault();
+				if (Utils.GetDefaultCulture().Name != Utils.GetCurrentCulture().Name) {
+					var lang = Module.Languages.Where(l => l.Culture == Utils.GetCurrentCulture().Name).SingleOrDefault();
 
 					if (lang != null) {
 						str.Append(
@@ -115,10 +115,11 @@ namespace Piranha.Localization
 			};
 		}
 
-		private static void ResetCulture() {
+		private static void ResetCulture(System.Web.HttpContextBase context) {
 			var def = Utils.GetDefaultCulture();
 
 			if (def.Name != CultureInfo.CurrentUICulture.Name) {
+				context.Items.Add("LOCALIZATION_CULTURE", CultureInfo.CurrentUICulture.Name);
 				Thread.CurrentThread.CurrentCulture =
 					Thread.CurrentThread.CurrentUICulture = def;
 			}
