@@ -8,7 +8,7 @@ The module is released under the **MIT** license.
 
 ## Status
 
-The localization module is under development. Check the issue list for information about the current status. The module is built for the **currently released** version of Piranha CMS, which is **2.2.1** and will not run together with the development master branch of the Piranha repository.
+The localization module is under development. Check the issue list for information about the current status. The module is built for the **currently released** version of Piranha CMS, which is **2.2.2** and will not run together with the development master branch of the Piranha repository.
 
 ## Configuration
 

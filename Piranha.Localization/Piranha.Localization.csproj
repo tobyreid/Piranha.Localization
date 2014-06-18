@@ -45,13 +45,13 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="Piranha, Version=2.2.5252.16617, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Piranha, Version=2.2.5281.40282, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\PiranhaCMS.Core.2.2.2-beta1\lib\net45\Piranha.dll</HintPath>
+      <HintPath>..\packages\PiranhaCMS.Core.2.2.2\lib\net45\Piranha.dll</HintPath>
     </Reference>
     <Reference Include="RazorGenerator.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\PiranhaCMS.Core.2.2.2-beta1\lib\net45\RazorGenerator.Mvc.dll</HintPath>
+      <HintPath>..\packages\PiranhaCMS.Core.2.2.2\lib\net45\RazorGenerator.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
