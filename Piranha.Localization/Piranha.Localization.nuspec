@@ -10,8 +10,8 @@
 		<projectUrl>http://github.com/piranhacms/piranha/</projectUrl>
 		<iconUrl>http://piranhacms.org/content/img/nuget.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<description></description>
-		<summary></summary>
+		<description>Piranha CMS Localization</description>
+		<summary>Piranha CMS Localization</summary>
 		<copyright>Håkan Edling</copyright>
 		<dependencies>
 			<group targetFramework=".NETFramework4.5">
