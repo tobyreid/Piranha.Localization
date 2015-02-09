@@ -57,7 +57,7 @@ namespace Piranha.Localization
 				Localizer.LocalizePageBeforeSave(model, publish);
 
 				// Reset culture
-				ResetCulture(controller.HttpContext);
+				//ResetCulture(controller.HttpContext); -- Appears to break the Manager when page initially loads after a POST
 
 				// Reset title
 				if (model.Page.IsNew)
@@ -85,15 +85,17 @@ namespace Piranha.Localization
 			//
 			// Page edit toolbar
 			//
-			Hooks.Manager.Toolbar.PageEditToolbarRender += (url, str, model) => {
-				str.Append(String.Format("<li><a href=\"{0}\">Default</a></li>",
-					url.Action("edit", new { id = model.Page.Id })));
+            Hooks.Manager.Toolbar.PageEditToolbarRender += (url, str, model) =>
+            {
+                str.Append(String.Format("<li><a href=\"{0}\"><span class=\"flag flag-gb\"></span>English (UK)</a></li>",
+                    url.Action("edit", new { id = model.Page.Id })));
 
-				foreach (var lang in Module.Languages) {
-					str.Append(String.Format("<li><a href=\"{0}\">{1}</a></li>",
-						"/" + lang.UrlPrefix + url.Action("edit", new { id = model.Page.Id }),
-						lang.Name));
-				}
+                foreach (var lang in Module.Languages)
+                {
+                    str.Append(String.Format("<li><a href=\"{0}\"><span class=\"flag flag-{2}\"></span> {1}</a></li>",
+                        "/" + lang.UrlPrefix + url.Action("edit", new { id = model.Page.Id }),
+                        lang.Name, lang.Culture.Split('-')[1].ToLower()));
+                }
 
 				//
 				// Modify the post action to the currently selected language.

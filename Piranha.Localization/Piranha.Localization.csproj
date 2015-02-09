@@ -118,6 +118,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Piranha.Localization.nuspec" />
     <None Include="Piranha.LICENSE.md" />
     <None Include="RazorGenerator.LICENSE.md" />
   </ItemGroup>

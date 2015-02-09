@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+	<metadata>
+		<id>PiranhaCMSLocalization</id>
+		<version>$version$</version>
+		<title>Piranha CMS Localization</title>
+		<authors>Håkan Edling</authors>
+		<owners />
+		<licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+		<projectUrl>http://github.com/piranhacms/piranha/</projectUrl>
+		<iconUrl>http://piranhacms.org/content/img/nuget.png</iconUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description></description>
+		<summary></summary>
+		<copyright>Håkan Edling</copyright>
+		<dependencies>
+			<group targetFramework=".NETFramework4.5">
+				<dependency id="PiranhaCMS.Core" version="2.2.4" />
+        <dependency id="AutoMapper" version="3.3.0" />
+        <dependency id="EntityFramework" version="6.1.1" />
+        <dependency id="MarkdownSharp" version="1.13.0.0" />
+        <dependency id="Microsoft.AspNet.Mvc" version="5.2.2" />
+        <dependency id="Microsoft.AspNet.Razor" version="3.2.2" />
+        <dependency id="Microsoft.AspNet.WebPages" version="3.2.2" />
+        <dependency id="Microsoft.Web.Infrastructure" version="1.0.0.0" />
+        <dependency id="WebActivatorEx" version="2.0.6" />
+			</group>
+		</dependencies>
+	</metadata>
+</package>

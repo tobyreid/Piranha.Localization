@@ -4,7 +4,6 @@ using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Web;
-using System.Web.Configuration;
 using System.Web.Script.Serialization;
 
 namespace Piranha.Localization
@@ -15,7 +14,7 @@ namespace Piranha.Localization
 		/// Localizes the client page model depending on the current UI culture.
 		/// </summary>
 		/// <param name="model">The page model</param>
-		public static void LocalizePageModel(Piranha.Models.PageModel model) {
+		public static void LocalizePageModel(Models.PageModel model) {
 			var def = Utils.GetDefaultCulture();
 			
 			//
@@ -26,23 +25,21 @@ namespace Piranha.Localization
 
 				using (var db = new Db()) {
 					var translation = db.PageTranslations
-						.Include(p => p.Regions)
-						.Where(p => p.PageId == model.Page.Id && !p.IsDraft)
-						.SingleOrDefault();
-
+					    .Include(p => p.Regions).SingleOrDefault(p => p.PageId == model.Page.Id && !p.IsDraft && p.Culture == CultureInfo.CurrentUICulture.Name);
+				    if (translation == null) return;
 					// Map page values
-					((Piranha.Models.Page)model.Page).Title = translation.Title;
-					((Piranha.Models.Page)model.Page).NavigationTitle = translation.NavigationTitle;
-					((Piranha.Models.Page)model.Page).Keywords = translation.Keywords;
-					((Piranha.Models.Page)model.Page).Description = translation.Description;
+					((Models.Page)model.Page).Title = translation.Title;
+					((Models.Page)model.Page).NavigationTitle = translation.NavigationTitle;
+					((Models.Page)model.Page).Keywords = translation.Keywords;
+					((Models.Page)model.Page).Description = translation.Description;
 
 					// Map regions
 					foreach (var reg in translation.Regions) {
-						var template = Piranha.Models.RegionTemplate.GetSingle(reg.TemplateId);
+						var template = Models.RegionTemplate.GetSingle(reg.TemplateId);
 						if (template != null) {
 							var internalId = template.InternalId;
 							var type = Extend.ExtensionManager.Current.GetType(reg.Type);
-							object val = null;
+							object val;
 
 							if (typeof(IHtmlString).IsAssignableFrom(type)) {
 								val = new HtmlString(reg.Body);
@@ -62,7 +59,7 @@ namespace Piranha.Localization
 		/// Loads the localized content depending on the current UI culture
 		/// </summary>
 		/// <param name="model">The page edit model</param>
-		public static void LocalizePageOnLoad(Piranha.Models.Manager.PageModels.EditModel model) {
+		public static void LocalizePageOnLoad(Models.Manager.PageModels.EditModel model) {
 			var def = Utils.GetDefaultCulture();
 			
 			//
@@ -73,9 +70,7 @@ namespace Piranha.Localization
 
 				using (var db = new Db()) {
 					var translation = db.PageTranslations
-						.Include(p => p.Regions)
-						.Where(p => p.PageId == model.Page.Id && p.IsDraft)
-						.SingleOrDefault();
+					    .Include(p => p.Regions).SingleOrDefault(p => p.PageId == model.Page.Id && p.IsDraft && p.Culture == CultureInfo.CurrentUICulture.Name);
 
 					if (translation != null) {
 						// Map page values
@@ -88,14 +83,12 @@ namespace Piranha.Localization
 							var region = model.Regions[n];
 
 							// Get the translated region
-							var reg = translation.Regions
-								.Where(r => r.RegionId == region.Id && r.IsDraft == region.IsDraft)
-								.SingleOrDefault();
+							var reg = translation.Regions.SingleOrDefault(r => r.RegionId == region.Id && r.IsDraft == region.IsDraft && r.Culture ==  CultureInfo.CurrentUICulture.Name);
 							if (reg != null) {
 								if (region.Body is IHtmlString) {
-									region.Body = new Piranha.Extend.Regions.HtmlRegion(reg.Body);
+									region.Body = new Extend.Regions.HtmlRegion(reg.Body);
 								} else {
-									region.Body = (Piranha.Extend.IExtension)js.Deserialize(reg.Body, region.Body.GetType());
+									region.Body = (Extend.IExtension)js.Deserialize(reg.Body, region.Body.GetType());
 								}
 							}
 						}
@@ -109,14 +102,14 @@ namespace Piranha.Localization
 		/// </summary>
 		/// <param name="model">The page edit model</param>
 		/// <param name="publish">If the page should be published</param>
-		public static void LocalizePageBeforeSave(Piranha.Models.Manager.PageModels.EditModel model, bool publish) {
+		public static void LocalizePageBeforeSave(Models.Manager.PageModels.EditModel model, bool publish) {
 			var def = Utils.GetDefaultCulture();
 			
 			//
 			// Check that we have a culture other than the default culture
 			//
 			if (def.Name != CultureInfo.CurrentUICulture.Name) {
-				var old = Piranha.Models.Manager.PageModels.EditModel.GetById(model.Page.Id);
+				var old = Models.Manager.PageModels.EditModel.GetById(model.Page.Id);
 
 				SaveModel(model, false);
 				if (publish)
@@ -145,17 +138,16 @@ namespace Piranha.Localization
 		/// </summary>
 		/// <param name="model">The model</param>
 		/// <param name="publish">The state of the model</param>
-		private static void SaveModel(Piranha.Models.Manager.PageModels.EditModel model, bool publish) {
+		private static void SaveModel(Models.Manager.PageModels.EditModel model, bool publish) {
 			var js = new JavaScriptSerializer();
 
 			using (var db = new Db()) {
 				var translation = db.PageTranslations
-					.Include(p => p.Regions)
-					.Where(p => p.PageId == model.Page.Id && p.IsDraft != publish)
-					.SingleOrDefault();
+				    .Include(p => p.Regions).SingleOrDefault(p => p.PageId == model.Page.Id && p.IsDraft != publish && p.Culture == CultureInfo.CurrentUICulture.Name);
 
 				if (translation == null) {
-					translation = new Entities.PageTranslation() {
+					translation = new Entities.PageTranslation
+					{
 						Id = Guid.NewGuid(),
 						PageId = model.Page.Id,
 						IsDraft = !publish,
@@ -178,7 +170,8 @@ namespace Piranha.Localization
 				for (var n = 0; n < model.Regions.Count; n++) {
 					var region = model.Regions[n];
 
-					var reg = new Entities.RegionTranslation() {
+					var reg = new Entities.RegionTranslation
+					{
 						Id = Guid.NewGuid(),
 						PageId = translation.Id,
 						RegionId = region.Id,
