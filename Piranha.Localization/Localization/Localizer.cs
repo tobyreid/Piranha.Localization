@@ -32,6 +32,7 @@ namespace Piranha.Localization
 					((Models.Page)model.Page).NavigationTitle = translation.NavigationTitle;
 					((Models.Page)model.Page).Keywords = translation.Keywords;
 					((Models.Page)model.Page).Description = translation.Description;
+					((Models.Page)model.Page).IsHidden = translation.IsHidden;
 
 					// Map regions
 					foreach (var reg in translation.Regions) {
@@ -78,6 +79,7 @@ namespace Piranha.Localization
 						model.Page.NavigationTitle = translation.NavigationTitle;
 						model.Page.Keywords = translation.Keywords;
 						model.Page.Description = translation.Description;
+                        model.Page.IsHidden = translation.IsHidden;
 
 						for (var n = 0; n < model.Regions.Count; n++) {
 							var region = model.Regions[n];
@@ -121,6 +123,7 @@ namespace Piranha.Localization
 					model.Page.NavigationTitle = old.Page.NavigationTitle;
 					model.Page.Keywords = old.Page.Keywords;
 					model.Page.Description = old.Page.Description;
+                    model.Page.IsHidden = old.Page.IsHidden;
 				}
 
 				// Restore original regions
@@ -151,7 +154,8 @@ namespace Piranha.Localization
 						Id = Guid.NewGuid(),
 						PageId = model.Page.Id,
 						IsDraft = !publish,
-						Culture = CultureInfo.CurrentUICulture.Name
+						Culture = CultureInfo.CurrentUICulture.Name,
+                        IsHidden = model.Page.IsHidden
 					};
 					db.PageTranslations.Add(translation);
 				}
@@ -161,6 +165,7 @@ namespace Piranha.Localization
 				translation.NavigationTitle = model.Page.NavigationTitle;
 				translation.Keywords = model.Page.Keywords;
 				translation.Description = model.Page.Description;
+			    translation.IsHidden = model.Page.IsHidden;
 
 				// Delete old region translations for simplicity
 				while (translation.Regions.Count > 0)

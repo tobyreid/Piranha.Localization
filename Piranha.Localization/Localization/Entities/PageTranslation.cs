@@ -54,6 +54,11 @@ namespace Piranha.Localization.Entities
 		/// Gets/sets the meta description.
 		/// </summary>
 		public string Description { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this translated page is hidden in the sitemap
+        /// </summary>
+        public bool IsHidden { get; set; }
 		#endregion
 
 		#region Navigation properties
