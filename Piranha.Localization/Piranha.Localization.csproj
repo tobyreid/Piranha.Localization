@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Localization\Db.cs" />
+    <Compile Include="Localization\Dto\SiteMapHrefAlternative.cs" />
     <Compile Include="Localization\Entities\Maps\PageTranslationMap.cs" />
     <Compile Include="Localization\Entities\Maps\RegionTranslationMap.cs" />
     <Compile Include="Localization\Entities\PageTranslation.cs" />

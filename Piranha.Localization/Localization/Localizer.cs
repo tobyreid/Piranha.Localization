@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Security.Policy;
 using System.Web;
 using System.Web.Script.Serialization;
+using Piranha.Localization.Dto;
 
 namespace Piranha.Localization
 {
@@ -56,7 +58,44 @@ namespace Piranha.Localization
 			}
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Returns a list of alternative hrefs for the sitemap
+        /// </summary>
+        /// <param name="sitemap">The sitemap.</param>
+        /// <returns></returns>
+	    public static IEnumerable<SiteMapHrefAlternative> LocalizeSitemapHrefAlternatives(Models.Sitemap sitemap)
+	    {
+	        var def = Utils.GetDefaultCulture();
+
+	        yield return
+	            new SiteMapHrefAlternative
+	            {
+	                Culture = def.Name,
+	                IsHidden = sitemap.IsHidden,
+	                PageId = sitemap.Id,
+	                PermaLink = sitemap.Permalink
+	            };
+	        using (var db = new Db())
+	        {
+	            var translation = db.PageTranslations
+	                .Include(p => p.Regions)
+	                .Where(
+	                    p => p.PageId == sitemap.Id && !p.IsDraft);
+	            foreach (var pageTranslation in translation)
+	            {
+	                yield return new SiteMapHrefAlternative
+	                {
+	                    Culture = pageTranslation.Culture,
+	                    IsHidden = pageTranslation.IsHidden,
+	                    PageId = pageTranslation.Id,
+	                    PermaLink = sitemap.Permalink
+	                };
+	            }
+	        }
+	    }
+
+
+	    /// <summary>
 		/// Loads the localized content depending on the current UI culture
 		/// </summary>
 		/// <param name="model">The page edit model</param>
