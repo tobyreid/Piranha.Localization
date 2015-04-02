@@ -6,6 +6,8 @@ using System.Linq;
 using System.Security.Policy;
 using System.Web;
 using System.Web.Script.Serialization;
+using Piranha.Areas.Manager.Views.Shared.EditorTemplates;
+using Piranha.Data;
 using Piranha.Localization.Dto;
 using Piranha.Localization.Entities;
 
@@ -53,8 +55,11 @@ namespace Piranha.Localization
 					((Models.Page)model.Page).IsHidden = translation.IsHidden;
 
 					// Map regions
-					foreach (var reg in translation.Regions) {
-						var template = Models.RegionTemplate.GetSingle(reg.TemplateId);
+					foreach (var reg in translation.Regions)
+					{
+					    if (!Application.Current.CacheProvider.Contains(reg.TemplateId.ToString()))
+					        Application.Current.CacheProvider[reg.TemplateId.ToString()] = Models.RegionTemplate.GetSingle(reg.TemplateId);
+                        var template = (Models.RegionTemplate)Application.Current.CacheProvider[reg.TemplateId.ToString()];
 						if (template != null) {
 							var internalId = template.InternalId;
 							var type = Extend.ExtensionManager.Current.GetType(reg.Type);
@@ -224,7 +229,7 @@ namespace Piranha.Localization
 				translation.Description = model.Page.Description;
 			    translation.IsHidden = model.Page.IsHidden;
 
-				// Delete old region translations for simplicity
+				// Delete old region translations for simplicity - no need to expire cache as new ids created.
 				while (translation.Regions.Count > 0)
 					db.RegionTranslations.Remove(translation.Regions[0]);
 
